@@ -12,8 +12,9 @@ const auth = (req, res, next) => {
   if (token) {
     try {
       jwt.verify(token, process.env.SECRET);
-    } finally {
-      tokenIsValid = true;
+      tokenIsValid = true; // Only set to true if verification succeeds
+    } catch (err) {
+      tokenIsValid = false; // Token is invalid or expired
     }
   }
 

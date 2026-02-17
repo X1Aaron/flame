@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 const { join } = require('path');
-const Umzug = require('umzug');
+const { Umzug, SequelizeStorage } = require('umzug');
 
 // Utils
 const backupDB = require('./utils/backupDb');
@@ -15,13 +15,20 @@ const sequelize = new Sequelize({
 
 const umzug = new Umzug({
   migrations: {
-    path: join(__dirname, './migrations'),
-    params: [sequelize.getQueryInterface()],
+    glob: join(__dirname, './migrations/*.js'),
+    resolve: ({ name, path, context }) => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const migration = require(path);
+      return {
+        name,
+        up: async () => migration.up(context, Sequelize),
+        down: async () => migration.down(context, Sequelize),
+      };
+    },
   },
-  storage: 'sequelize',
-  storageOptions: {
-    sequelize,
-  },
+  context: sequelize.getQueryInterface(),
+  storage: new SequelizeStorage({ sequelize }),
+  logger: console,
 });
 
 const connectDB = async () => {
@@ -34,7 +41,7 @@ const connectDB = async () => {
     const pendingMigrations = await umzug.pending();
 
     if (pendingMigrations.length > 0) {
-      logger.log('Executing pending migrations');
+      logger.log(`Executing ${pendingMigrations.length} pending migration(s)`);
       await umzug.up();
     }
 
