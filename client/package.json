@@ -26,7 +26,6 @@
     "react-router-dom": "^5.3.4",
     "react-scripts": "^5.0.1",
     "redux": "^5.0.1",
-    "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^3.1.0",
     "skycons-ts": "^1.0.0",
     "typescript": "^5.7.2",

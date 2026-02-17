@@ -55,10 +55,13 @@ export const WeatherWidget = (): JSX.Element => {
     return () => webSocketClient.close();
   }, []);
 
+  // Check if location is available (zipCode, lat/long in config)
+  const hasLocation = config.zipCode || (config.lat && config.long);
+
   return (
     <div className={classes.WeatherWidget}>
       {configLoading ||
-        (config.WEATHER_API_KEY && weather.id > 0 && (
+        (hasLocation && weather.id > 0 && (
           <Fragment>
             <div className={classes.WeatherIcon}>
               <WeatherIcon

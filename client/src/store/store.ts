@@ -1,10 +1,15 @@
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { thunk } from 'redux-thunk';
 import { reducers } from './reducers';
+
+// Redux DevTools Extension support
+const composeEnhancers =
+  (typeof window !== 'undefined' &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
 
 export const store = createStore(
   reducers,
   {},
-  composeWithDevTools(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk))
 );

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import 'external-svg-loader';
+import axios from 'axios';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +32,7 @@ export const App = (): JSX.Element => {
   const { config, loading } = useSelector((state: State) => state.config);
 
   const dispath = useDispatch();
-  const { fetchQueries, setTheme, logout, createNotification, fetchThemes } =
+  const { fetchQueries, setTheme, logout, createNotification, fetchThemes, updateConfig } =
     bindActionCreators(actionCreators, dispath);
 
   useEffect(() => {
@@ -67,6 +68,7 @@ export const App = (): JSX.Element => {
 
     return () => window.clearInterval(tokenIsValid);
   }, []);
+
 
   // If there is no user theme, set the default one
   useEffect(() => {

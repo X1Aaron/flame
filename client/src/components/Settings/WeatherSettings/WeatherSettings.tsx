@@ -41,14 +41,6 @@ export const WeatherSettings = (): JSX.Element => {
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Check for api key input
-    if ((formData.lat || formData.long) && !formData.WEATHER_API_KEY) {
-      createNotification({
-        title: 'Warning',
-        message: 'API key is missing. Weather Module will NOT work',
-      });
-    }
-
     // Save settings
     await updateConfig(formData);
 
@@ -97,63 +89,35 @@ export const WeatherSettings = (): JSX.Element => {
 
   return (
     <form onSubmit={(e) => formSubmitHandler(e)}>
-      <SettingsHeadline text="API" />
-      {/* API KEY */}
+      <SettingsHeadline text="Weather Service" />
+      {/* Weather Info */}
       <InputGroup>
-        <label htmlFor="WEATHER_API_KEY">API key</label>
-        <input
-          type="text"
-          id="WEATHER_API_KEY"
-          name="WEATHER_API_KEY"
-          placeholder="secret"
-          value={formData.WEATHER_API_KEY}
-          onChange={(e) => inputChangeHandler(e)}
-        />
         <span>
-          Using
-          <a href="https://www.weatherapi.com/pricing.aspx" target="blank">
-            {' '}
-            Weather API
+          Using{' '}
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">
+            Open-Meteo
           </a>
-          . Key is required for weather module to work.
+          {' '}- Free weather API with no API key required.
         </span>
       </InputGroup>
 
       <SettingsHeadline text="Location" />
-      {/* LAT */}
+      {/* ZIP CODE */}
       <InputGroup>
-        <label htmlFor="lat">Latitude</label>
+        <label htmlFor="zipCode">ZIP Code or City</label>
         <input
-          type="number"
-          id="lat"
-          name="lat"
-          placeholder="52.22"
-          value={formData.lat}
-          onChange={(e) => inputChangeHandler(e, { isNumber: true })}
-          step="any"
-          lang="en-150"
+          type="text"
+          id="zipCode"
+          name="zipCode"
+          placeholder="90210 or Los Angeles"
+          value={formData.zipCode || ''}
+          onChange={(e) => inputChangeHandler(e)}
+          maxLength={50}
         />
-        <span onClick={getLocation}>
-          <a href="#">Click to get current location</a>
-        </span>
+        <span>Enter US ZIP code or city name</span>
       </InputGroup>
 
-      {/* LONG */}
-      <InputGroup>
-        <label htmlFor="long">Longitude</label>
-        <input
-          type="number"
-          id="long"
-          name="long"
-          placeholder="21.01"
-          value={formData.long}
-          onChange={(e) => inputChangeHandler(e, { isNumber: true })}
-          step="any"
-          lang="en-150"
-        />
-      </InputGroup>
-
-      <SettingsHeadline text="Other" />
+      <SettingsHeadline text="Display Options" />
       {/* TEMPERATURE */}
       <InputGroup>
         <label htmlFor="isCelsius">Temperature unit</label>
